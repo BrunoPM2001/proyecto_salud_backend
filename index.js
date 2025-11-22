@@ -7,14 +7,20 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get("/data", async (req, res) => {
+app.get("/prevencion", async (req, res) => {
   try {
-    const ejercicios = await pool.query("SELECT * FROM ejercicios");
-    const medidas = await pool.query("SELECT * FROM prevencion");
-    res.json({
-      ejercicios: ejercicios[0],
-      prevencion: medidas[0],
-    });
+    const [rows] = await pool.query("SELECT * FROM prevencion");
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error en consulta a la BD" });
+  }
+});
+
+app.get("/ejercicios", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM ejercicios");
+    res.json(rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error en consulta a la BD" });
